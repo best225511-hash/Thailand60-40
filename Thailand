@@ -1,1 +1,87 @@
 index.html
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ไทยช่วยไทยพลัส 60:40</title>
+
+<style>
+body{
+font-family:Arial,sans-serif;
+max-width:700px;
+margin:20px auto;
+padding:20px;
+background:#f5f5f5;
+}
+.box{
+background:white;
+padding:20px;
+border-radius:15px;
+box-shadow:0 2px 10px rgba(0,0,0,.1);
+}
+input,button{
+width:100%;
+padding:12px;
+margin:8px 0;
+font-size:18px;
+}
+.result{
+background:#eef;
+}
+button{
+background:#0f766e;
+color:white;
+border:none;
+border-radius:8px;
+}
+</style>
+</head>
+<body>
+
+<div class="box">
+<h1>🇹🇭 ไทยช่วยไทยพลัส 60:40</h1>
+
+<p>รัฐช่วย 60% สูงสุด 200 บาท</p>
+
+<input id="total" type="number" placeholder="กรอกยอดสินค้า">
+
+<input id="statePay" class="result" placeholder="รัฐช่วยจ่าย" readonly>
+
+<input id="userPay" class="result" placeholder="ผู้ซื้อชำระเอง" readonly>
+
+<button onclick="calculate()">คำนวณ</button>
+</div>
+
+<script>
+function money(x){
+return Number(x).toLocaleString('th-TH',{
+minimumFractionDigits:2,
+maximumFractionDigits:2
+})+' บาท';
+}
+
+function calculate(){
+
+let total=parseFloat(
+document.getElementById('total').value
+);
+
+if(!total){
+alert('กรุณากรอกยอดสินค้า');
+return;
+}
+
+let statePay=Math.min(total*0.60,200);
+let userPay=total-statePay;
+
+document.getElementById('statePay').value=
+money(statePay);
+
+document.getElementById('userPay').value=
+money(userPay);
+}
+</script>
+
+</body>
+</html>
