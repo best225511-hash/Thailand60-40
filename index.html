@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ไทยช่วยไทยพลัส 60:40</title>
+
+<style>
+body{
+font-family:Arial,sans-serif;
+background:#f5f7fa;
+padding:20px;
+max-width:700px;
+margin:auto;
+}
+
+.card{
+background:#fff;
+padding:25px;
+border-radius:15px;
+box-shadow:0 2px 10px rgba(0,0,0,.1);
+}
+
+h1{
+text-align:center;
+color:#0f766e;
+}
+
+p{
+text-align:center;
+color:#666;
+}
+
+label{
+display:block;
+margin-top:15px;
+font-weight:bold;
+}
+
+input{
+width:100%;
+padding:12px;
+margin-top:5px;
+border:1px solid #ccc;
+border-radius:8px;
+font-size:18px;
+}
+
+.result{
+background:#f0fdfa;
+font-weight:bold;
+}
+
+button{
+width:100%;
+padding:14px;
+margin-top:15px;
+border:none;
+border-radius:8px;
+background:#0f766e;
+color:white;
+font-size:18px;
+font-weight:bold;
+}
+
+.summary{
+margin-top:20px;
+padding:15px;
+background:#ecfeff;
+border-radius:10px;
+display:none;
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+
+<h1>🇹🇭 ไทยช่วยไทยพลัส 60:40</h1>
+
+<p>รัฐช่วยจ่าย 60% สูงสุด 200 บาทต่อวัน</p>
+
+<label>ยอดสินค้าทั้งหมด (บาท)</label>
+<input type="number" id="total" placeholder="กรอกยอดสินค้า">
+
+<label>รัฐช่วยจ่าย</label>
+<input type="text" id="statePay" class="result" readonly>
+
+<label>ผู้ซื้อชำระเอง</label>
+<input type="text" id="userPay" class="result" readonly>
+
+<button onclick="calculate()">
+คำนวณ
+</button>
+
+<div class="summary" id="summary">
+<p><strong>ยอดสินค้า:</strong> <span id="showTotal"></span></p>
+<p><strong>รัฐช่วย:</strong> <span id="showState"></span></p>
+<p><strong>ผู้ซื้อจ่าย:</strong> <span id="showUser"></span></p>
+</div>
+
+</div>
+
+<script>
+
+function money(num){
+return Number(num).toLocaleString('th-TH',{
+minimumFractionDigits:2,
+maximumFractionDigits:2
+}) + ' บาท';
+}
+
+function calculate(){
+
+let total = parseFloat(
+document.getElementById('total').value
+);
+
+if(isNaN(total) || total <= 0){
+alert('กรุณากรอกยอดสินค้า');
+return;
+}
+
+let statePay = total * 0.60;
+
+if(statePay > 200){
+statePay = 200;
+}
+
+let userPay = total - statePay;
+
+document.getElementById('statePay').value = money(statePay);
+document.getElementById('userPay').value = money(userPay);
+
+document.getElementById('showTotal').textContent = money(total);
+document.getElementById('showState').textContent = money(statePay);
+document.getElementById('showUser').textContent = money(userPay);
+
+document.getElementById('summary').style.display='block';
+}
+
+</script>
+
+</body>
+</html>
