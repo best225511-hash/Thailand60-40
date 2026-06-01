@@ -6,97 +6,229 @@
 <title>ไทยช่วยไทยพลัส 60:40</title>
 
 <style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',Tahoma,sans-serif;
+}
+
 body{
-font-family:Arial,sans-serif;
-background:#f5f7fa;
+background:linear-gradient(135deg,#0f766e,#14b8a6);
+min-height:100vh;
 padding:20px;
-max-width:700px;
-margin:auto;
+display:flex;
+justify-content:center;
+align-items:center;
 }
 
-.card{
+.container{
+width:100%;
+max-width:750px;
 background:#fff;
-padding:25px;
-border-radius:15px;
-box-shadow:0 2px 10px rgba(0,0,0,.1);
+border-radius:25px;
+padding:30px;
+box-shadow:0 20px 50px rgba(0,0,0,.15);
 }
 
-h1{
+.hero{
 text-align:center;
+margin-bottom:25px;
+}
+
+.hero h1{
 color:#0f766e;
+font-size:2rem;
+margin-bottom:10px;
 }
 
-p{
-text-align:center;
-color:#666;
+.hero p{
+color:#64748b;
+}
+
+.notice{
+background:#ecfeff;
+border-left:5px solid #14b8a6;
+padding:15px;
+border-radius:12px;
+margin-bottom:20px;
+line-height:1.7;
+}
+
+.form-group{
+margin-bottom:18px;
 }
 
 label{
 display:block;
-margin-top:15px;
-font-weight:bold;
+margin-bottom:8px;
+font-weight:600;
+color:#334155;
 }
 
 input{
 width:100%;
-padding:12px;
-margin-top:5px;
-border:1px solid #ccc;
-border-radius:8px;
+padding:14px;
+border:2px solid #d1d5db;
+border-radius:12px;
 font-size:18px;
 }
 
 .result{
 background:#f0fdfa;
 font-weight:bold;
+color:#0f766e;
 }
 
-button{
+.btn{
 width:100%;
-padding:14px;
-margin-top:15px;
+padding:15px;
 border:none;
-border-radius:8px;
-background:#0f766e;
-color:white;
+border-radius:12px;
 font-size:18px;
 font-weight:bold;
+cursor:pointer;
+margin-top:10px;
+}
+
+.calculate{
+background:#0f766e;
+color:#fff;
+}
+
+.reset{
+background:#64748b;
+color:#fff;
+}
+
+.share{
+background:#2563eb;
+color:#fff;
+}
+
+.line{
+background:#06c755;
+color:#fff;
 }
 
 .summary{
-margin-top:20px;
-padding:15px;
-background:#ecfeff;
-border-radius:10px;
 display:none;
+margin-top:20px;
+background:#f8fafc;
+padding:20px;
+border-radius:15px;
+}
+
+.summary h3{
+color:#0f766e;
+margin-bottom:10px;
+}
+
+.summary p{
+margin:8px 0;
+font-size:18px;
+}
+
+.warning{
+margin-top:10px;
+font-weight:bold;
+color:#dc2626;
+}
+
+.credit{
+margin-top:25px;
+text-align:center;
+}
+
+.credit-box{
+display:inline-block;
+padding:12px 20px;
+background:#ccfbf1;
+color:#115e59;
+border-radius:50px;
+font-weight:bold;
+}
+
+.share-buttons{
+margin-top:15px;
+display:grid;
+gap:10px;
 }
 </style>
 </head>
+
 <body>
 
-<div class="card">
+<div class="container">
 
+<div class="hero">
 <h1>🇹🇭 ไทยช่วยไทยพลัส 60:40</h1>
+<p>ระบบคำนวณสิทธิ์สนับสนุนภาครัฐ</p>
+</div>
 
-<p>รัฐช่วยจ่าย 60% สูงสุด 200 บาทต่อวัน</p>
+<div class="notice">
+🏛️ รัฐช่วยจ่าย 60% ของยอดซื้อ<br>
+💰 จำกัดวงเงินช่วยเหลือสูงสุด 200 บาทต่อวัน
+</div>
 
+<div class="form-group">
 <label>ยอดสินค้าทั้งหมด (บาท)</label>
-<input type="number" id="total" placeholder="กรอกยอดสินค้า">
+<input type="number"
+id="total"
+placeholder="กรอกยอดสินค้า"
+onkeypress="if(event.key==='Enter') calculate()">
+</div>
 
+<div class="form-group">
 <label>รัฐช่วยจ่าย</label>
 <input type="text" id="statePay" class="result" readonly>
+</div>
 
+<div class="form-group">
 <label>ผู้ซื้อชำระเอง</label>
 <input type="text" id="userPay" class="result" readonly>
+</div>
 
-<button onclick="calculate()">
+<button class="btn calculate" onclick="calculate()">
 คำนวณ
 </button>
 
+<button class="btn reset" onclick="resetForm()">
+ล้างข้อมูล
+</button>
+
+<div id="warning" class="warning"></div>
+
 <div class="summary" id="summary">
-<p><strong>ยอดสินค้า:</strong> <span id="showTotal"></span></p>
-<p><strong>รัฐช่วย:</strong> <span id="showState"></span></p>
-<p><strong>ผู้ซื้อจ่าย:</strong> <span id="showUser"></span></p>
+
+<h3>📋 สรุปผลการคำนวณ</h3>
+
+<p>💰 ยอดสินค้า : <strong id="showTotal"></strong></p>
+
+<p>🏛️ รัฐช่วยจ่าย : <strong id="showState"></strong></p>
+
+<p>👤 ผู้ซื้อชำระเอง : <strong id="showUser"></strong></p>
+
+<p>📊 สัดส่วนรัฐช่วย : <strong id="percentState"></strong></p>
+
+<div class="share-buttons">
+
+<button class="btn share" onclick="shareFacebook()">
+📘 แชร์ไป Facebook
+</button>
+
+<button class="btn line" onclick="shareLine()">
+💚 แชร์ไป LINE
+</button>
+
+</div>
+
+</div>
+
+<div class="credit">
+<div class="credit-box">
+พัฒนาระบบการคำนวณเบื้องต้น โดย เบส วชิรวิทย์
+</div>
 </div>
 
 </div>
@@ -112,31 +244,81 @@ maximumFractionDigits:2
 
 function calculate(){
 
-let total = parseFloat(
+let total=parseFloat(
 document.getElementById('total').value
 );
 
-if(isNaN(total) || total <= 0){
+if(isNaN(total)||total<=0){
 alert('กรุณากรอกยอดสินค้า');
 return;
 }
 
-let statePay = total * 0.60;
+let statePay=total*0.60;
 
-if(statePay > 200){
-statePay = 200;
+if(statePay>200){
+statePay=200;
 }
 
-let userPay = total - statePay;
+let userPay=total-statePay;
 
-document.getElementById('statePay').value = money(statePay);
-document.getElementById('userPay').value = money(userPay);
+let actualPercent=(statePay/total)*100;
 
-document.getElementById('showTotal').textContent = money(total);
-document.getElementById('showState').textContent = money(statePay);
-document.getElementById('showUser').textContent = money(userPay);
+document.getElementById('statePay').value=money(statePay);
+
+document.getElementById('userPay').value=money(userPay);
+
+document.getElementById('showTotal').textContent=money(total);
+
+document.getElementById('showState').textContent=money(statePay);
+
+document.getElementById('showUser').textContent=money(userPay);
+
+document.getElementById('percentState').textContent=
+actualPercent.toFixed(2)+'%';
+
+if(total>333.33){
+document.getElementById('warning').textContent=
+'หมายเหตุ: รัฐช่วยเต็มสิทธิ์ 200 บาทแล้ว';
+}else{
+document.getElementById('warning').textContent='';
+}
 
 document.getElementById('summary').style.display='block';
+
+}
+
+function resetForm(){
+
+document.getElementById('total').value='';
+document.getElementById('statePay').value='';
+document.getElementById('userPay').value='';
+document.getElementById('warning').textContent='';
+document.getElementById('summary').style.display='none';
+
+}
+
+function shareFacebook(){
+
+let url=window.location.href;
+
+window.open(
+'https://www.facebook.com/sharer/sharer.php?u='+
+encodeURIComponent(url),
+'_blank'
+);
+
+}
+
+function shareLine(){
+
+let url=window.location.href;
+
+window.open(
+'https://social-plugins.line.me/lineit/share?url='+
+encodeURIComponent(url),
+'_blank'
+);
+
 }
 
 </script>
